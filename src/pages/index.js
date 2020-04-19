@@ -1,15 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
-import L from 'leaflet';
-import { Marker } from 'react-leaflet';
-
-import { promiseToFlyTo, getCurrentLocation } from 'lib/map';
 
 import Layout from 'components/Layout';
 import Container from 'components/Container';
 import Map from 'components/Map';
-
-import gatsby_astronaut from 'assets/images/gatsby-astronaut.jpg';
 
 const LOCATION = {
   lat: 38.9072,
@@ -46,39 +40,6 @@ const IndexPage = () => {
    */
 
   async function mapEffect({ leafletElement } = {}) {
-    if ( !leafletElement ) return;
-
-    const popup = L.popup({
-      maxWidth: 800
-    });
-
-    const location = await getCurrentLocation().catch(() => LOCATION );
-
-    const { current = {} } = markerRef || {};
-    const { leafletElement: marker } = current;
-
-    marker.setLatLng( location );
-    popup.setLatLng( location );
-    popup.setContent( popupContentHello );
-
-    setTimeout( async () => {
-      await promiseToFlyTo( leafletElement, {
-        zoom: ZOOM,
-        center: location
-      });
-
-      marker.bindPopup( popup );
-
-      setTimeout(() => marker.openPopup(), timeToOpenPopupAfterZoom );
-      setTimeout(() => marker.setPopupContent( popupContentGatsby ), timeToUpdatePopupAfterZoom );
-    }, timeToZoom );
-  }
-
-  const mapSettings = {
-    center: CENTER,
-    defaultBaseMap: 'OpenStreetMap',
-    zoom: DEFAULT_ZOOM,
-    mapEffect
   };
 
   return (
@@ -87,9 +48,7 @@ const IndexPage = () => {
         <title>Home Page</title>
       </Helmet>
 
-      <Map {...mapSettings}>
-        <Marker ref={markerRef} position={CENTER} />
-      </Map>
+      <Map {...mapSettings}/>
 
       <Container type="content" className="text-center home-start">
         <h2>Still Getting Started?</h2>
